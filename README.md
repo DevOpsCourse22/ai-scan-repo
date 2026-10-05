@@ -1,0 +1,178 @@
+# AI Scan Repos
+
+> An AI-Powered DevSecOps Repository Analysis Platform
+
+AI Scan Repos is an enterprise-oriented DevSecOps platform designed to analyze Git repositories by combining deterministic security scanners with AI-assisted reasoning.
+
+The platform orchestrates multiple analysis engines, enriches their findings using Large Language Models (LLMs), and produces a single actionable report while ensuring customer source code is never permanently stored.
+
+---
+
+# Key Features
+
+- Full repository security scanning
+- Code quality analysis
+- AI-assisted reasoning
+- Summary and Deep Report modes
+- Repository ownership verification
+- Ephemeral Kubernetes Jobs
+- Privacy-first architecture
+- Plugin-based scanner framework
+- AI provider abstraction
+- Cloud-native deployment
+
+---
+
+# High-Level Architecture
+
+The platform is composed of several independent services.
+
+```text
+Developer
+      │
+      ▼
+Repository Provider
+(GitHub / GitLab)
+      │
+      ▼
+Backend API
+      │
+      ▼
+Review Orchestrator
+      │
+      ▼
+Ephemeral Kubernetes Job
+      │
+      ▼
+Analysis Engine
+      │
+      ├── Semgrep
+      ├── Gitleaks
+      ├── Trivy
+      ├── Quality Analysis
+      └── AI Analysis
+      │
+      ▼
+Unified Report
+```
+
+---
+
+# Core Design Principles
+
+- Security by Design
+- Privacy by Default
+- AI as an Augmentation Layer
+- Full Repository Deterministic Scanning
+- Ephemeral Repository Processing
+- Trust-Based Authorization
+- Modular Plugin Architecture
+- AI Provider Independence
+- Cloud Agnostic Deployment
+
+---
+
+# Documentation
+
+Project documentation is located under the [docs](./docs/) directory.
+
+| No. | Document | Link |
+|---:|---|---|
+| 01 | Executive Summary | [01-executive-summary.md](docs/01-executive-summary.md) |
+| 02 | Business Requirements | [02-business-requirements.md](docs/02-business-requirements.md) |
+| 03 | High-Level Design | [03-high-level-design/README.md](docs/03-high-level-design/README.md) |
+| 04 | Low-Level Design | [04-low-level-design.md](docs/04-low-level-design.md) |
+| 05 | Security and Authorization Design | [05-security-authorization-design.md](docs/05-security-authorization-design.md) |
+| 06 | Threat Model | [06-threat-model.md](docs/06-threat-model.md) |
+| 07 | API Specification | [07-api-specification.md](docs/07-api-specification.md) |
+| 08 | Database Design | [08-database-design.md](docs/08-database-design.md) |
+| 09 | Kubernetes Design | [09-kubernetes-design.md](docs/09-kubernetes-design.md) |
+| 10 | Deployment Guide | [10-deployment-guide.md](docs/10-deployment-guide.md) |
+| 11 | Monitoring and Observability | [11-monitoring-observability.md](docs/11-monitoring-observability.md) |
+| 12 | Roadmap | [12-roadmap.md](docs/12-roadmap.md) |
+| 13 | Future Enhancements | [13-future-enhancements.md](docs/13-future-enhancements.md) |
+| 14 | MCP Adaptation Plan | [14-mcp-adaptation-plan.md](docs/14-mcp-adaptation-plan.md) |
+| 15 | MCP Server Documentation | [15-mcp-server-documentation.md](docs/15-mcp-server-documentation.md) |
+| 16 | Gemma 4 26B User Guide | [16-gemma-user-guide.md](docs/16-gemma-user-guide.md) |
+| 17 | Review API (Flask) | [17-review-api.md](docs/17-review-api.md) |
+| 18 | Team Setup Guide | [18-team-setup-guide.md](docs/18-team-setup-guide.md) |
+| 19 | Secret Exposure — Limits Analysis | [19-secret-exposure-limits.md](docs/19-secret-exposure-limits.md) |
+| 20 | Phase 3 Plan | [20-phase-3-plan.md](docs/20-phase-3-plan.md) |
+| 21 | Writing the Kubernetes manifests | [21-kubernetes-manifests-guide.md](docs/21-kubernetes-manifests-guide.md) |
+
+---
+
+# Project Status
+
+Running on K3s since 2026-09-30 (namespace `ai-scan-repos`; guide:
+`Code-Review-MCP/k8s/DEPLOY-K3S.md`). A redesigned website with pause and
+resume, an admin-chosen AI model (LM Studio or a cloud API), severity
+circles in the report and review deletion is on branch
+`elad/ui-redesign-pause-resume`, under the repo https://github.com/hadsahar/DevSecOps-Final-Project/tree/main not merged yet.
+
+What is done and what is next: `docs/WORK-TRACKER.md`. Where a new session
+picks up: `HANDOFF.md`. Notes for Claude Code: [CLAUDE.md](./CLAUDE.md).
+
+---
+
+# Repository Structure
+
+```text
+ai-scan-repo/
+├── README.md
+├── docs/
+│   ├── index.md
+│   ├── 01-executive-summary.md
+│   ├── 02-business-requirements.md
+│   ├── 03-high-level-design/
+│   │   └── README.md
+│   ├── 04-low-level-design.md
+│   ├── 05-security-authorization-design.md
+│   ├── 06-threat-model.md
+│   ├── 07-api-specification.md
+│   ├── 08-database-design.md
+│   ├── 09-kubernetes-design.md
+│   ├── 10-deployment-guide.md
+│   ├── 11-monitoring-observability.md
+│   ├── 12-roadmap.md
+│   ├── 13-future-enhancements.md
+│   ├── 14-mcp-adaptation-plan.md
+│   ├── 15-mcp-server-documentation.md
+│   ├── 16-gemma-user-guide.md
+│   ├── 17-review-api.md
+│   ├── 18-team-setup-guide.md
+│   ├── 19-secret-exposure-limits.md
+│   ├── 20-phase-3-plan.md
+│   ├── 21-kubernetes-manifests-guide.md
+│   ├── adr/
+│   └── diagrams/
+├── reports/
+├── ai-scanner-backend/
+│   ├── README.md
+│   ├── app/
+│   ├── tests/
+│   ├── Dockerfile
+│   └── ...
+├── ai-scanner-frontend/
+│   ├── README.md
+│   ├── src/
+│   ├── package.json
+│   └── ...
+├── ai-scanner-gateway/
+│   ├── README.md
+│   ├── src/
+│   ├── tests/
+│   └── ...
+├── DevSecOps-Final-Project/
+│   └── legacy project and migration notes
+└── ...
+```
+
+This repository is the documentation and platform umbrella for the split architecture. The implementation itself is distributed across the sibling repositories: [ai-scanner-backend](../ai-scanner-backend), [ai-scanner-frontend](../ai-scanner-frontend), and [ai-scanner-gateway](../ai-scanner-gateway).
+
+---
+
+# License
+
+This project is currently under active development.
+License information will be added before the first public release.

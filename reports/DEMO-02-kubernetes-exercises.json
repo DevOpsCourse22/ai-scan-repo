@@ -1,0 +1,415 @@
+{
+  "repo_url": "https://github.com/Aviel-Amitay/kubernetes-exercises",
+  "branch": "labs",
+  "commit": "ac0fec4e77a89b6e9e76ba90bde46e98c2c021fa",
+  "model": "google/gemma-4-e4b",
+  "generated_at": "2026-08-20T15:47:11Z",
+  "stats": {
+    "files_reviewed": 34,
+    "files_failed": 0,
+    "files_skipped": 0,
+    "issues_total": 10,
+    "issues_by_severity": {
+      "critical": 0,
+      "high": 4,
+      "medium": 4,
+      "low": 2,
+      "info": 0
+    },
+    "average_score": 6.89,
+    "files_excluded": 3
+  },
+  "reviews": [
+    {
+      "file": "1-pods-labs/lab1/busybox-pod.yml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "1-pods-labs/lab1/grafana-pod.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "1-pods-labs/lab2/webapp-pod.yaml",
+      "summary": "Consider using Deployments instead of raw Pods for better lifecycle management.",
+      "issues": [
+        {
+          "severity": "medium",
+          "file": "1-pods-labs/lab2/webapp-pod.yaml",
+          "line": 18,
+          "title": "The environment variable name 'producation' is misspelled and should be corrected for maintainability."
+        }
+      ],
+      "score": 7,
+      "noted": true
+    },
+    {
+      "file": "1-pods-labs/lab3/jenkins-pod.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "1-pods-labs/lab3/jenkins-svc.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "2-ReplicaSets/lab1/mongo-express-rs.yml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "2-ReplicaSets/lab1/mongo-express-service.yml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "2-ReplicaSets/lab1/mongo-rs.yml",
+      "summary": "For a single instance database setup, consider using StatefulSet for stable network identity.",
+      "issues": [
+        {
+          "severity": "low",
+          "file": "2-ReplicaSets/lab1/mongo-rs.yml",
+          "line": 9,
+          "title": "Using ReplicaSet with replicas: 1 is redundant; consider using a single Pod definition if high availability isn't required."
+        }
+      ],
+      "score": 8,
+      "noted": true
+    },
+    {
+      "file": "2-ReplicaSets/lab1/mongo-svc.yml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "2-ReplicaSets/microservices-lab/config.yml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "2-ReplicaSets/microservices-lab/frontend/Dockerfile",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/apps/backend/Dockerfile",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/apps/backend/package.json",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/apps/backend/server.js",
+      "summary": "The fallback URI in server.js should reference service names, not 'localhost'.",
+      "issues": [
+        {
+          "severity": "medium",
+          "file": "class-porject-1/apps/backend/server.js",
+          "line": 10,
+          "title": "The fallback MONGO_URI uses 'localhost', which is incorrect for a Kubernetes cluster environment."
+        }
+      ],
+      "score": 7,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/apps/frontend/Dockerfile",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/apps/frontend/package.json",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/apps/frontend/server.js",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/01-initial-config/01-namespace.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/01-initial-config/02-secrets.yaml",
+      "summary": "Hardcoded secrets are a major security risk; use proper secret injection mechanisms.",
+      "issues": [
+        {
+          "severity": "high",
+          "file": "class-porject-1/k8s/01-initial-config/02-secrets.yaml",
+          "line": 9,
+          "title": "Secrets contain hardcoded credentials; use a dedicated secret management solution (e.g., Vault) in production."
+        }
+      ],
+      "score": 3,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/k8s/01-initial-config/03-configmap.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/02-storage/pvc/04-shared-pvc.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/02-storage/pvc/05-mongo-pvc.yaml",
+      "summary": "",
+      "issues": [
+        {
+          "severity": "high",
+          "file": "class-porject-1/k8s/02-storage/pvc/05-mongo-pvc.yaml",
+          "line": 10,
+          "title": "PVC requests (2Gi) should be consistent with the actual storage needs of the service."
+        }
+      ],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/02-storage/pvc/06-backup-pvc.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/01-db/07-mongo-deployment.yaml",
+      "summary": "Add resource limits and requests to the container spec.",
+      "issues": [
+        {
+          "severity": "high",
+          "file": "class-porject-1/k8s/03-deployment/01-db/07-mongo-deployment.yaml",
+          "line": null,
+          "title": "Missing resource requests and limits for container stability."
+        }
+      ],
+      "score": 7,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/01-db/08-mongo-service.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/02-redis/14-redis-daemonset.yaml",
+      "summary": "Add resource limits and requests to the container spec.",
+      "issues": [
+        {
+          "severity": "high",
+          "file": "class-porject-1/k8s/03-deployment/02-redis/14-redis-daemonset.yaml",
+          "line": null,
+          "title": "Missing resource requests and limits for container stability."
+        }
+      ],
+      "score": 7,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/02-redis/15-redis-service.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/03-backend-app/09-backend-deployment.yaml",
+      "summary": "Add resource limits and requests to the container spec.",
+      "issues": [
+        {
+          "severity": "medium",
+          "file": "class-porject-1/k8s/03-deployment/03-backend-app/09-backend-deployment.yaml",
+          "line": null,
+          "title": "Missing resource requests and limits for container stability."
+        }
+      ],
+      "score": 7,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/03-backend-app/10-backend-service.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/04-frontend-app/11-frontend-deployment.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/03-deployment/04-frontend-app/12-frontend-service.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/13-ingress.yaml",
+      "summary": "",
+      "issues": [],
+      "score": null,
+      "noted": false
+    },
+    {
+      "file": "class-porject-1/k8s/16-job-backup.yaml",
+      "summary": "The backup script is functional but brittle; consider using dedicated tools or better volume management.",
+      "issues": [
+        {
+          "severity": "medium",
+          "file": "class-porject-1/k8s/16-job-backup.yaml",
+          "line": 20,
+          "title": "Backup script uses hardcoded paths and lacks error handling for file operations."
+        }
+      ],
+      "score": 8,
+      "noted": true
+    },
+    {
+      "file": "class-porject-1/k8s/17-cronjob-backup.yaml",
+      "summary": "Ensure the CronJob's jobTemplate is robust and handles potential failures gracefully.",
+      "issues": [
+        {
+          "severity": "low",
+          "file": "class-porject-1/k8s/17-cronjob-backup.yaml",
+          "line": null,
+          "title": "CronJob definition should use a Job template for better resource isolation."
+        }
+      ],
+      "score": 8,
+      "noted": true
+    }
+  ],
+  "failures": [],
+  "skipped": [],
+  "excluded": {
+    "count": 3,
+    "by_type": {
+      ".md": 3
+    },
+    "examples": [
+      "class-porject-1/README.md",
+      "class-porject-1/extra-challenge.md",
+      "class-porject-1/k8s/README.md"
+    ]
+  },
+  "mode": "brief",
+  "overall": {
+    "summary": "This repository provides a comprehensive set of Kubernetes manifests and associated microservices for deploying multi-tier applications. While the overall architecture is sound for demonstrating K8s concepts, the codebase lacks critical operational best practices required for production use. Major deficiencies include missing resource requests/limits, reliance on hardcoded secrets, and general inconsistencies in deployment patterns (e.g., using Pods instead of Deployments).",
+    "score": 5,
+    "key_issues": [
+      {
+        "severity": "high",
+        "file": "class-porject-1/k8s/02-storage/pvc/05-mongo-pvc.yaml",
+        "line": 10,
+        "title": "PVC requests (2Gi) should be consistent with the actual storage needs of the service."
+      },
+      {
+        "severity": "high",
+        "file": "class-porject-1/k8s/01-initial-config/02-secrets.yaml",
+        "line": 9,
+        "title": "Secrets contain hardcoded credentials; use a dedicated secret management solution (e.g., Vault) in production."
+      },
+      {
+        "severity": "medium",
+        "file": "1-pods-labs/lab2/webapp-pod.yaml",
+        "line": 18,
+        "title": "The environment variable name 'producation' is misspelled and should be corrected for maintainability."
+      },
+      {
+        "severity": "medium",
+        "file": "class-porject-1/apps/backend/server.js",
+        "line": 10,
+        "title": "The fallback MONGO_URI uses 'localhost', which is incorrect for a Kubernetes cluster environment."
+      },
+      {
+        "severity": "low",
+        "file": "2-ReplicaSets/lab1/mongo-rs.yml",
+        "line": 9,
+        "title": "Using ReplicaSet with replicas: 1 is redundant; consider using a single Pod definition if high availability isn't required."
+      },
+      {
+        "severity": "high",
+        "file": "class-porject-1/k8s/03-deployment/01-db/07-mongo-deployment.yaml",
+        "line": null,
+        "title": "Missing resource requests and limits for container stability."
+      },
+      {
+        "severity": "high",
+        "file": "class-porject-1/k8s/03-deployment/02-redis/14-redis-daemonset.yaml",
+        "line": null,
+        "title": "Missing resource requests and limits for container stability."
+      },
+      {
+        "severity": "medium",
+        "file": "class-porject-1/k8s/03-deployment/03-backend-app/09-backend-deployment.yaml",
+        "line": null,
+        "title": "Missing resource requests and limits for container stability."
+      },
+      {
+        "severity": "medium",
+        "file": "class-porject-1/k8s/16-job-backup.yaml",
+        "line": 20,
+        "title": "Backup script uses hardcoded paths and lacks error handling for file operations."
+      },
+      {
+        "severity": "low",
+        "file": "class-porject-1/k8s/17-cronjob-backup.yaml",
+        "line": null,
+        "title": "CronJob definition should use a Job template for better resource isolation."
+      }
+    ],
+    "files_packed": 34,
+    "batches": 2,
+    "files_not_shown": []
+  }
+}
