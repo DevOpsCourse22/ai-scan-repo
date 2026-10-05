@@ -1,5 +1,19 @@
 # Work tracker — what is done, what is not, and what the lecturer asked for
 
+> Last updated: 2026-10-05 
+
+## Current umbrella summary
+
+This project now functions as an umbrella repository for the split architecture:
+
+- [ai-scanner-gateway](../ai-scanner-gateway) — GitHub-facing auth and orchestration
+- [ai-scanner-backend](../ai-scanner-backend) — review engine and scanning lifecycle
+- [ai-scanner-frontend](../ai-scanner-frontend) — user-facing review UI
+- [README.md](../README.md) — project overview, architecture context, and documentation hub
+
+The sections below still contain the older planning and execution notes from the earlier monorepo phase. They remain valuable historical context, but the current umbrella view above is the short version of the present repo layout.
+
+---
 Living document. Update it as things land; do not let it drift into a
 snapshot. Supersedes `where-we-are-2026-09-21.md`, which is kept only as a
 record of that day.

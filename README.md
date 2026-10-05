@@ -6,6 +6,14 @@ AI Scan Repos is an enterprise-oriented DevSecOps platform designed to analyze G
 
 The platform orchestrates multiple analysis engines, enriches their findings using Large Language Models (LLMs), and produces a single actionable report while ensuring customer source code is never permanently stored.
 
+This repository acts as the documentation and architecture umbrella for the platform. The actual implementation is split across three active repositories:
+
+- [ai-scanner-gateway](https://github.com/DevOpsCourse22/ai-scanner-gateway) handles GitHub webhook ingestion, authentication, repository triggering, and orchestration of review requests.
+- [ai-scanner-backend](https://github.com/DevOpsCourse22/ai-scanner-backend) exposes the review API, manages review lifecycle state, resumes or restarts scans, and serves generated reports.
+- [ai-scanner-frontend](https://github.com/DevOpsCourse22/ai-scanner-frontend) provides the web interface for submitting repositories, monitoring progress, and reviewing findings.
+
+Together, they form a security review platform that combines repository scanning, AI enrichment, evidence-based findings, and a clean operational workflow for teams reviewing code risk.
+
 ---
 
 # Key Features
@@ -110,8 +118,8 @@ resume, an admin-chosen AI model (LM Studio or a cloud API), severity
 circles in the report and review deletion is on branch
 `elad/ui-redesign-pause-resume`, under the repo https://github.com/hadsahar/DevSecOps-Final-Project/tree/main not merged yet.
 
-What is done and what is next: `docs/WORK-TRACKER.md`. Where a new session
-picks up: `HANDOFF.md`. Notes for Claude Code: [CLAUDE.md](./CLAUDE.md).
+What is done and what is next: [docs/WORK-TRACKER.md](./docs/WORK-TRACKER.md). Where a new session
+picks up: [HANDOFF.md](./HANDOFF.md). Notes for Claude Code: [CLAUDE.md](./CLAUDE.md).
 
 ---
 
@@ -147,6 +155,8 @@ ai-scan-repo/
 │   ├── adr/
 │   └── diagrams/
 ├── reports/
+
+
 ├── ai-scanner-backend/
 │   ├── README.md
 │   ├── app/
@@ -163,12 +173,12 @@ ai-scan-repo/
 │   ├── src/
 │   ├── tests/
 │   └── ...
-├── DevSecOps-Final-Project/
-│   └── legacy project and migration notes
-└── ...
 ```
 
-This repository is the documentation and platform umbrella for the split architecture. The implementation itself is distributed across the sibling repositories: [ai-scanner-backend](../ai-scanner-backend), [ai-scanner-frontend](../ai-scanner-frontend), and [ai-scanner-gateway](../ai-scanner-gateway).
+This repository is the documentation and platform umbrella for the split architecture. The implementation itself is distributed across the sibling repositories:
+- [ai-scanner-backend](../ai-scanner-backend)
+- [ai-scanner-frontend](../ai-scanner-frontend)
+- [ai-scanner-gateway](../ai-scanner-gateway)
 
 ---
 
