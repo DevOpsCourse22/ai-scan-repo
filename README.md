@@ -175,11 +175,6 @@ ai-scan-repo/
 │   └── ...
 ```
 
-This repository is the documentation and platform umbrella for the split architecture. The implementation itself is distributed across the sibling repositories:
-- [ai-scanner-backend](../ai-scanner-backend)
-- [ai-scanner-frontend](../ai-scanner-frontend)
-- [ai-scanner-gateway](../ai-scanner-gateway)
-
 ---
 
 # License
