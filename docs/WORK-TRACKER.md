@@ -1,6 +1,6 @@
 # Work tracker — what is done, what is not, and what the lecturer asked for
 
-> Last updated: 2026-10-06
+> Last updated: 2026-10-09
 
 ## Current umbrella summary
 
@@ -13,38 +13,52 @@ This project now functions as an umbrella repository for the split architecture:
 
 The sections below still contain the older planning and execution notes from the earlier monorepo phase. They remain valuable historical context, but the current umbrella view above is the short version of the present repo layout.
 
-## Open items (checked 2026-10-06)
+## Status and open items (checked 2026-10-09)
 
-Checked by Sahar + Claude on the new repos. Already done and therefore not
-listed: `scanner-worker` moved into the backend repo, the gateway and
-deployment repos filled, the backend tests fixed for the new layout,
-`.gitignore` added and build artifacts removed, the monorepo links fixed.
+Checked by Sahar + Claude against the lecturer's brief and our own docs,
+from the repositories (K3S-SRV was not reachable, so nothing below was
+checked on the live cluster).
 
-**State on 2026-10-06:**
-- **All suites pass in the new repos:**
+**Done since 2026-10-06:** Jenkins with a pipeline per code repo, a local
+registry, GitHub webhooks through smee.io, one Argo CD Application per
+deployment repo (closes the old O6), image tags written by CI (closes O8),
+the GitHub credential for Jenkins (half of O7), Prometheus and Grafana
+installed on the cluster, and the new `ai-scanner-installer` repo (a web
+wizard for minikube / a server / EKS, still a draft). Test results on
+2026-10-06: backend 244, mcp-server 195, scanner 29, scanner-worker 73,
+security-tests 54, gateway 98 - all passing. gitleaks over all repos: no
+real secret, only fake keys planted in tests.
 
-  | Repo | Suite | Result |
-  |---|---|---|
-  | backend | backend | 244 passed |
-  | backend | mcp-server | 195 passed |
-  | backend | scanner | 29 passed |
-  | backend | scanner-worker | 73 passed |
-  | backend | security-tests | 54 passed |
-  | gateway | gateway | 98 passed |
+### Gaps against the brief
 
-- **gitleaks, over the full history of all seven repos, finds no real
-  secret.** It reports 6 hits, all fake keys planted in test fixtures.
+| # | Gap | Who decides / owns | Status |
+|---|---|---|---|
+| B1 | **Jenkins runs inside Kubernetes**, installed with a Helm chart; the brief says "applicative, NOT in a Docker container". Ask the lecturer before changing anything: either he accepts it (argument: CI agents as short-lived Pods, nothing to maintain on the host), or Jenkins moves to a service on the host | lecturer, then Elad | ❌ |
+| B2 | **No Helm in the deployment repos** (still kustomize). The brief names Helm | lecturer (with B1), then Sahar | ❌ |
+| B3 | **Prometheus and Grafana are not in git,** and there are no dashboards; the brief puts Grafana in the deployment repos. Terraform sits in the installer repo, not in the deployment repos | Elad | ❌ |
+| B4 | **Jenkins has no ArgoCD or Terraform credential,** both named in the brief. The design does not need one (Jenkins only commits, Argo CD deploys), but it should be stated, or an `argocd app wait` stage added that uses a read-only token | Elad + Sahar | ❌ |
+| B5 | **Hand-off to the lecturer (item 7):** read access to the repos, a way onto the tailnet, and a short guide to the API for his browser add-on | Sahar | ❌ |
+
+### Security
 
 | # | Item | Severity | Owner | Status |
 |---|---|---|---|---|
-| O1 | **The site's AI key also serves anonymous reviews.** quick and brief need no login, and every review runs on the service an admin chose in Settings. No cost today (LM Studio on the tailnet), but once a paid cloud key is saved, or the site is public on EKS, anyone who reaches it can spend that key. Fix: require login whenever a key is saved, or keep anonymous reviews on the local service only | Medium | Elad | ❌ |
-| O2 | **`POST /reviews/{id}/restart` does not forward the AI service from Settings,** so a review restarted through it runs on review-api's default. The UI only uses `resume`, which does. Simplest: remove `/restart` (gateway `app.py`) | Low | Elad | ❌ |
-| O3 | **Only `Elad-Eytan` is in `gateway-admins`** (ai-scanner-gateway-deployment), by username. Add Sahar and Aviel, in the `id:<number>` form the file recommends, which survives a rename | Low | Elad | ❌ |
-| O4 | **`main` cannot be protected:** GitHub answers 403 "Upgrade to GitHub Pro or make this repository public" for private repos in a free org. Options: make the repos public (gitleaks finds no real secret), look for a free GitHub Education upgrade, or rely on PRs by agreement plus Jenkins | - | team decision | ❌ |
-| O5 | **A gitleaks allowlist for the CI gate.** The 6 planted test keys (`mcp-server/tests/fixtures/dummy_repo`, the scanner-worker, review-api and gateway tests) will fail a gitleaks stage until they are allowlisted (`.gitleaksignore` with their fingerprints) | - | with Jenkins | ❌ |
-| O6 | **The deployment repos depend on each other's folders.** ai-scanner-backend-deployment's `kustomization.yaml` pulls `../ai-scanner-gateway-deployment` and `../ai-scanner-frontend-deployment`, so all three must be cloned side by side. ArgoCD clones one repo per Application, so this breaks there. Design point for the Helm charts: one self-contained chart and one ArgoCD Application per deployment repo, with shared objects (namespace, Ingress) owned by one of them | - | Sahar (Helm) | ❌ |
-| O7 | **Access for Jenkins and the lecturer.** The repos are private: Jenkins needs a GitHub credential (fine-grained PAT or GitHub App, read-only on the six repos), and the lecturer needs read access | - | Sahar | ❌ |
-| O8 | **The image tags are still `42495f9`,** a monorepo-era build, and the image names have no registry. Fixed by the CI/CD work (item 3) and the registry decision (item 4) | - | with Jenkins | ❌ |
+| S1 | **The pipelines scan the image, not the code.** Add a stage that runs our own scanner (Semgrep, Gitleaks, Trivy fs) on the repository as a gate, with a `.gitleaksignore` for the fake keys planted in tests (`mcp-server/tests/fixtures/dummy_repo`, the scanner-worker, review-api and gateway tests). For a security-scanning project this is the most visible gap | Medium | Sahar | ❌ |
+| S2 | **No NetworkPolicy,** although `09-kubernetes-design.md` describes one | Medium | Sahar | ❌ |
+| S3 | (was O1) **The site's AI key also serves anonymous reviews.** quick and brief need no login, and every review runs on the service an admin chose in Settings. No cost on LM Studio, but once a paid cloud key is saved, or the site is public on EKS, anyone who reaches it can spend that key. Fix: require login whenever a key is saved | Medium | Elad | ❌ |
+| S4 | (was O2) **`POST /reviews/{id}/restart` does not forward the AI service from Settings.** The UI only uses `resume`. Simplest: remove `/restart` | Low | Elad | ❌ |
+| S5 | (was O3) **Only `Elad-Eytan` is in `gateway-admins`,** by username. Add Sahar and Aviel in the `id:<number>` form | Low | Elad | ❌ |
+| S6 | (was O4) **`main` cannot be protected** on private repos in a free org (GitHub: "Upgrade to GitHub Pro or make this repository public"). Make the repos public, find a GitHub Education upgrade, or keep PRs by agreement | - | team | ❌ |
+
+### Documentation
+
+| # | Item | Owner | Status |
+|---|---|---|---|
+| D1 | **This tracker:** the requirement table and this section updated 2026-10-09 | Sahar | 🟡 this PR |
+| D2 | **`README.md` lists three repositories;** add the three deployment repos and the installer | Sahar | ❌ |
+| D3 | **The design docs describe things that were not built**, and read as if they were: OPA/Kyverno admission policy, External Secrets, SBOM and image signing, object storage for reports, "GitHub Actions is the preferred source pipeline" (`03-high-level-design/14-technology-stack.md`), NetworkPolicy. Add one "built vs. planned" page, and a status line at the top of each design doc pointing to it | Sahar | ❌ |
+| D4 | **Duplicate copies:** `docs/Zipped/`, `docs/Zipped.zip` and the `.docx` files repeat the Markdown and will drift. Keep one source | Sahar + Aviel | ❌ |
+| D5 | **No document of the delivery flow as built:** commit → Jenkins → registry → deployment repo → Argo CD → cluster. `ai-scanner-backend-deployment/CI-PIPELINES.md` explains the setup; the umbrella repo should link to it with one diagram | Sahar | ❌ |
 
 ---
 Living document. Update it as things land; do not let it drift into a
@@ -80,14 +94,14 @@ deployed to the cloud.
 | # | Requirement | Status |
 |---|---|---|
 | 0 | *(ours, not the lecturer's)* **Admin config page** — change AI model, LM Studio / other LLM endpoint or a cloud model, which deterministic scanners to run (not everyone wants Semgrep), and more as we think of it | 🟡 **Mostly done 2026-10-01** on branch `elad/ui-redesign-pause-resume` (not merged): new UI with its own Settings page (per-user theme, animation, default depth and branch), **Pause / Resume** across worker, review-api, gateway and UI, per-GitHub-account history, and an **AI model** section: site admins (ConfigMap `gateway-admins`, edited with kubectl) pick the service (LM Studio or a cloud API), model and API key (stored encrypted) for every review. Still open: choosing which deterministic scanners run |
-| 0.5 | *(ours, not the lecturer's)* **K8s infrastructure** via k3s now, EKS towards the end | 🟡 **k3s ✅ deployed and accepted 2026-09-30** (`docs/k8s-deployment-tests-2026-09-30.md`); EKS planned 10-09 → 10-10 |
-| 1 | **Jenkins, applicative** (NOT in a Docker container), with credentials for Docker, AWS, Terraform, Git, ArgoCD | ❌ not started — planned 10-01 → 10-03, on the critical path |
+| 0.5 | *(ours, not the lecturer's)* **K8s infrastructure** via k3s now, EKS towards the end | 🟡 **k3s ✅ deployed and accepted 2026-09-30.** EKS: Terraform drafted in `ai-scanner-installer/terraform/eks` (VPC, EKS, EFS, ECR, IRSA), not yet validated or run - planned last, on purpose |
+| 1 | **Jenkins, applicative** (NOT in a Docker container), with credentials for Docker, AWS, Terraform, Git, ArgoCD | 🟡 **Jenkins runs since 2026-10-09** with the three pipelines, but **inside k3s** (Helm chart `jenkins/jenkins`, `platform/jenkins/values.yaml`, agents as Pods), not applicative as the brief says - **ask the lecturer (B1)**. Credentials: Git (`github-deploy`); AWS prepared for ECR; none for ArgoCD or Terraform (B4) |
 | 2 | **Split GitHub into repos**: Frontend, Backend, Gateway + Frontend-deployment, Backend-deployment, Gateway-deployment. Deployment repos hold Helm, K8s, Terraform, Grafana. Docker and Jenkins live in the Backend repo. (lesson of 2026-08-31) | ✅ done 2026-10-06 by Aviel and Elad: six private repos in the org `DevOpsCourse22`, plus this docs repo. The code matches the monorepo's last `main` (8200439, after PR #10), and the monorepo is frozen. Deployment repos hold kustomize for now, not Helm |
-| 3 | **CI/CD per code repo** (code repos, not deployment repos), after the split | ❌ not started — was planned 10-04 → 10-07, unblocked now that the split is done |
-| 4 | **Decide where images live** | 🟡 today: built and imported into k3s by hand (commit tags). **Proposed, to decide 10-01:** a local registry (`registry:2`) on K3S-SRV for the Jenkins phase - free, private, no cloud - and ECR with EKS. Docker Hub (one free private repo) and GHCR (limited free private storage) do not fit four images |
-| 5 | **How to deliver env vars and the whole k8s stack** | 🟡 today: one `kubectl apply -k`, env vars in the manifests, Secrets created at hidden prompts (`k8s/DEPLOY-K3S.md` step B4, never in git). Next: Helm charts in the deployment repos, delivered by ArgoCD |
+| 3 | **CI/CD per code repo** (code repos, not deployment repos), after the split | ✅ **2026-10-09:** a `Jenkinsfile` in each code repo: Test → Build (BuildKit) → Trivy (fails on CRITICAL) → Push (main only) → Deploy (Jenkins commits the new tag to the deployment repo, Argo CD syncs it). It already caught CRITICALs in the frontend image. Missing: a security scan of the CODE (S1) |
+| 4 | **Decide where images live** | ✅ a local registry on K3S-SRV (`ai-scanner-backend-deployment/platform/registry`), written by the pipelines; ECR for EKS (installer) |
+| 5 | **How to deliver env vars and the whole k8s stack** | 🟡 kustomize in each deployment repo, one Argo CD Application per repo (2026-10-06); Secrets created by hand at hidden prompts, never in git. **Not Helm** (B2) |
 | 6 | **Elad reviews the Tailscale-in-K8s implementation** | 🟡 checks done (operator runs; the egress reaches only LM Studio's address and port; deleting the Service removes its tailnet device). Left: the write-up, and removing the temporary `tag:k3s-srv` grant in the tailnet policy |
-| 7 | *(the lecturer's own)* **Browser add-on** using the service - built by the lecturer himself, as a learner | 🟡 ours is to hand over, two days before submission, a service he can reach and integrate with - see "Preparing the hand-off" in the plan |
+| 7 | *(the lecturer's own)* **Browser add-on** using the service - built by the lecturer himself, as a learner | ❌ nothing prepared yet: the lecturer has no access to the repos or the tailnet, and there is no guide for building on the API (B5) |
 
 ### ⚠️ Three conflicts between the brief and what we told the team
 
