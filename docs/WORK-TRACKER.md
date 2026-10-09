@@ -17,7 +17,8 @@ The sections below still contain the older planning and execution notes from the
 
 Checked by Sahar + Claude against the lecturer's brief and our own docs,
 from the repositories (K3S-SRV was not reachable, so nothing below was
-checked on the live cluster).
+checked on the live cluster). **Owners are left empty on purpose:** the
+team splits the work in its next conversation.
 
 **Done since 2026-10-06:** Jenkins with a pipeline per code repo, a local
 registry, GitHub webhooks through smee.io, one Argo CD Application per
@@ -31,34 +32,34 @@ real secret, only fake keys planted in tests.
 
 ### Gaps against the brief
 
-| # | Gap | Who decides / owns | Status |
+| # | Gap | Owner | Status |
 |---|---|---|---|
-| B1 | **Jenkins runs inside Kubernetes**, installed with a Helm chart; the brief says "applicative, NOT in a Docker container". Ask the lecturer before changing anything: either he accepts it (argument: CI agents as short-lived Pods, nothing to maintain on the host), or Jenkins moves to a service on the host | lecturer, then Elad | ❌ |
-| B2 | **No Helm in the deployment repos** (still kustomize). The brief names Helm | lecturer (with B1), then Sahar | ❌ |
-| B3 | **Prometheus and Grafana are not in git,** and there are no dashboards; the brief puts Grafana in the deployment repos. Terraform sits in the installer repo, not in the deployment repos | Elad | ❌ |
-| B4 | **Jenkins has no ArgoCD or Terraform credential,** both named in the brief. The design does not need one (Jenkins only commits, Argo CD deploys), but it should be stated, or an `argocd app wait` stage added that uses a read-only token | Elad + Sahar | ❌ |
-| B5 | **Hand-off to the lecturer (item 7):** read access to the repos, a way onto the tailnet, and a short guide to the API for his browser add-on | Sahar | ❌ |
+| B1 | **Jenkins runs inside Kubernetes**, installed with a Helm chart; the brief says "applicative, NOT in a Docker container". Ask the lecturer before changing anything: either he accepts it (argument: CI agents as short-lived Pods, nothing to maintain on the host), or Jenkins moves to a service on the host | - | ❌ |
+| B2 | **No Helm in the deployment repos** (still kustomize). The brief names Helm | - | ❌ |
+| B3 | **Prometheus and Grafana are not in git,** and there are no dashboards; the brief puts Grafana in the deployment repos. Terraform sits in the installer repo, not in the deployment repos | - | ❌ |
+| B4 | **Jenkins has no ArgoCD or Terraform credential,** both named in the brief. The design does not need one (Jenkins only commits, Argo CD deploys), but it should be stated, or an `argocd app wait` stage added that uses a read-only token | - | ❌ |
+| B5 | **Hand-off to the lecturer (item 7):** read access to the repos, a way onto the tailnet, and a short guide to the API for his browser add-on | - | ❌ |
 
 ### Security
 
 | # | Item | Severity | Owner | Status |
 |---|---|---|---|---|
-| S1 | **The pipelines scan the image, not the code.** Add a stage that runs our own scanner (Semgrep, Gitleaks, Trivy fs) on the repository as a gate, with a `.gitleaksignore` for the fake keys planted in tests (`mcp-server/tests/fixtures/dummy_repo`, the scanner-worker, review-api and gateway tests). For a security-scanning project this is the most visible gap | Medium | Sahar | ❌ |
-| S2 | **No NetworkPolicy,** although `09-kubernetes-design.md` describes one | Medium | Sahar | ❌ |
-| S3 | (was O1) **The site's AI key also serves anonymous reviews.** quick and brief need no login, and every review runs on the service an admin chose in Settings. No cost on LM Studio, but once a paid cloud key is saved, or the site is public on EKS, anyone who reaches it can spend that key. Fix: require login whenever a key is saved | Medium | Elad | ❌ |
-| S4 | (was O2) **`POST /reviews/{id}/restart` does not forward the AI service from Settings.** The UI only uses `resume`. Simplest: remove `/restart` | Low | Elad | ❌ |
-| S5 | (was O3) **Only `Elad-Eytan` is in `gateway-admins`,** by username. Add Sahar and Aviel in the `id:<number>` form | Low | Elad | ❌ |
-| S6 | (was O4) **`main` cannot be protected** on private repos in a free org (GitHub: "Upgrade to GitHub Pro or make this repository public"). Make the repos public, find a GitHub Education upgrade, or keep PRs by agreement | - | team | ❌ |
+| S1 | **The pipelines scan the image, not the code.** Add a stage that runs our own scanner (Semgrep, Gitleaks, Trivy fs) on the repository as a gate, with a `.gitleaksignore` for the fake keys planted in tests (`mcp-server/tests/fixtures/dummy_repo`, the scanner-worker, review-api and gateway tests). For a security-scanning project this is the most visible gap | Medium | - | ❌ |
+| S2 | **No NetworkPolicy,** although `09-kubernetes-design.md` describes one | Medium | - | ❌ |
+| S3 | (was O1) **The site's AI key also serves anonymous reviews.** quick and brief need no login, and every review runs on the service an admin chose in Settings. No cost on LM Studio, but once a paid cloud key is saved, or the site is public on EKS, anyone who reaches it can spend that key. Fix: require login whenever a key is saved | Medium | - | ❌ |
+| S4 | (was O2) **`POST /reviews/{id}/restart` does not forward the AI service from Settings.** The UI only uses `resume`. Simplest: remove `/restart` | Low | - | ❌ |
+| S5 | (was O3) **Only `Elad-Eytan` is in `gateway-admins`,** by username. Add Sahar and Aviel in the `id:<number>` form | Low | - | ❌ |
+| S6 | (was O4) **`main` cannot be protected** on private repos in a free org (GitHub: "Upgrade to GitHub Pro or make this repository public"). Make the repos public, find a GitHub Education upgrade, or keep PRs by agreement | - | - | ❌ |
 
 ### Documentation
 
 | # | Item | Owner | Status |
 |---|---|---|---|
-| D1 | **This tracker:** the requirement table and this section updated 2026-10-09 | Sahar | 🟡 this PR |
-| D2 | **`README.md` lists three repositories;** add the three deployment repos and the installer | Sahar | ❌ |
-| D3 | **The design docs describe things that were not built**, and read as if they were: OPA/Kyverno admission policy, External Secrets, SBOM and image signing, object storage for reports, "GitHub Actions is the preferred source pipeline" (`03-high-level-design/14-technology-stack.md`), NetworkPolicy. Add one "built vs. planned" page, and a status line at the top of each design doc pointing to it | Sahar | ❌ |
-| D4 | **Duplicate copies:** `docs/Zipped/`, `docs/Zipped.zip` and the `.docx` files repeat the Markdown and will drift. Keep one source | Sahar + Aviel | ❌ |
-| D5 | **No document of the delivery flow as built:** commit → Jenkins → registry → deployment repo → Argo CD → cluster. `ai-scanner-backend-deployment/CI-PIPELINES.md` explains the setup; the umbrella repo should link to it with one diagram | Sahar | ❌ |
+| D1 | **This tracker:** the requirement table and this section updated 2026-10-09 | - | 🟡 this PR |
+| D2 | **`README.md` lists three repositories;** add the three deployment repos and the installer | - | ❌ |
+| D3 | **The design docs describe things that were not built**, and read as if they were: OPA/Kyverno admission policy, External Secrets, SBOM and image signing, object storage for reports, "GitHub Actions is the preferred source pipeline" (`03-high-level-design/14-technology-stack.md`), NetworkPolicy. Add one "built vs. planned" page, and a status line at the top of each design doc pointing to it | - | ❌ |
+| D4 | **Duplicate copies:** `docs/Zipped/`, `docs/Zipped.zip` and the `.docx` files repeat the Markdown and will drift. Keep one source | - | ❌ |
+| D5 | **No document of the delivery flow as built:** commit → Jenkins → registry → deployment repo → Argo CD → cluster. `ai-scanner-backend-deployment/CI-PIPELINES.md` explains the setup; the umbrella repo should link to it with one diagram | - | ❌ |
 
 ---
 Living document. Update it as things land; do not let it drift into a
