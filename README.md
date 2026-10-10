@@ -86,6 +86,7 @@ Project documentation is located under the [docs](./docs/) directory.
 
 | No. | Document | Link |
 |---:|---|---|
+| — | Complete Installation and Deployment Guide | [Initial-the-project.md](./Initial-the-project.md) |
 | 01 | Executive Summary | [01-executive-summary.md](docs/01-executive-summary.md) |
 | 02 | Business Requirements | [02-business-requirements.md](docs/02-business-requirements.md) |
 | 03 | High-Level Design | [03-high-level-design/README.md](docs/03-high-level-design/README.md) |
@@ -128,6 +129,7 @@ picks up: [HANDOFF.md](./HANDOFF.md). Notes for Claude Code: [CLAUDE.md](./CLAUD
 ```text
 ai-scan-repo/
 ├── README.md
+├── Initial-the-project.md
 ├── docs/
 │   ├── index.md
 │   ├── 01-executive-summary.md
